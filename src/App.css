@@ -1,22 +1,25 @@
 .hud {
   position: fixed;
-  bottom: clamp(20px, 4vmin, 56px);
-  left: clamp(20px, 4vmin, 56px);
+  bottom: max(clamp(20px, 4vmin, 56px), env(safe-area-inset-bottom));
+  left: max(clamp(20px, 4vmin, 56px), env(safe-area-inset-left));
+  right: max(clamp(20px, 4vmin, 56px), env(safe-area-inset-right));
   z-index: 5;
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .hud__btn {
   font-family: var(--font-mono);
-  font-size: clamp(13px, 1.1vw, 15px);
-  letter-spacing: 0.28em;
+  font-size: clamp(12px, 1.1vw, 15px);
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   background: rgba(7, 6, 15, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
   color: var(--ink);
-  padding: 12px 22px;
+  padding: 12px 20px;
+  min-height: 44px;
   cursor: pointer;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -28,6 +31,12 @@
   box-shadow: 0 0 32px rgba(66, 133, 244, 0.3);
 }
 .hud__key { color: rgba(245, 243, 255, 0.4); margin-left: 8px; }
+
+@media (max-width: 540px) {
+  .hud { gap: 8px; }
+  .hud__btn { padding: 10px 14px; letter-spacing: 0.18em; }
+  .hud__key { display: none; }
+}
 
 .flash {
   position: fixed;

@@ -32,10 +32,25 @@ body,
   background: var(--bg);
   color: var(--ink);
   overflow: hidden;
+  overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
   font-family: var(--font-mono);
-  cursor: crosshair;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (pointer: fine) {
+  html,
+  body,
+  #root {
+    cursor: crosshair;
+  }
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 ::selection {

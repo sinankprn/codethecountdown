@@ -5,7 +5,11 @@
   display: grid;
   grid-template-rows: auto 1fr;
   pointer-events: none;
-  padding: clamp(20px, 4vmin, 56px);
+  padding:
+    max(clamp(20px, 4vmin, 56px), env(safe-area-inset-top))
+    max(clamp(20px, 4vmin, 56px), env(safe-area-inset-right))
+    max(clamp(20px, 4vmin, 56px), env(safe-area-inset-bottom))
+    max(clamp(20px, 4vmin, 56px), env(safe-area-inset-left));
   font-family: var(--font-mono);
   color: var(--ink);
 }
@@ -70,7 +74,7 @@
 .cd__digit {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(22vh, 52vh, 760px);
+  font-size: min(clamp(22vh, 52vh, 760px), 70vw);
   line-height: 1;
   letter-spacing: 0;
   display: inline-block;
@@ -98,7 +102,7 @@
 }
 
 .cd__digit--io {
-  font-size: clamp(18vh, 38vh, 580px);
+  font-size: min(clamp(18vh, 38vh, 580px), 60vw);
   letter-spacing: 0;
   font-weight: 900;
   background-image: linear-gradient(
@@ -130,8 +134,8 @@
 
 .cd__brand {
   position: absolute;
-  bottom: clamp(20px, 4vmin, 56px);
-  right: clamp(20px, 4vmin, 56px);
+  bottom: max(clamp(20px, 4vmin, 56px), env(safe-area-inset-bottom));
+  right: max(clamp(20px, 4vmin, 56px), env(safe-area-inset-right));
   display: inline-flex;
   align-items: baseline;
   gap: 16px;
@@ -155,3 +159,10 @@
   color: transparent;
 }
 .cd__brand-year { color: rgba(245, 243, 255, 0.5); }
+
+@media (max-width: 540px) {
+  .cd__rule { padding: 8px 14px 8px 10px; gap: 10px; letter-spacing: 0.22em; }
+  .cd__rule-name { letter-spacing: 0.14em; }
+  /* Brand would collide with the HUD's wrapped buttons on phones — hide it. */
+  .cd__brand { display: none; }
+}

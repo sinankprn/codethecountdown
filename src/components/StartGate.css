@@ -99,10 +99,21 @@
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.gate:hover .gate__cta {
-  border-color: var(--io-blue);
-  box-shadow: 0 0 64px rgba(66, 133, 244, 0.35), inset 0 0 24px rgba(66, 133, 244, 0.08);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .gate:hover .gate__cta {
+    border-color: var(--io-blue);
+    box-shadow: 0 0 64px rgba(66, 133, 244, 0.35), inset 0 0 24px rgba(66, 133, 244, 0.08);
+    transform: translateY(-2px);
+  }
 }
 .gate__cta-arrow { color: var(--io-green); font-size: 11px; }
 .gate__cta-key { color: rgba(245, 243, 255, 0.4); font-size: 11px; }
+
+@media (max-width: 540px) {
+  .gate__inner { gap: 16px; padding: 28px 20px; }
+  .gate__title { font-size: clamp(36px, 13vw, 64px); gap: 4px; }
+  .gate__sub { font-size: 13px; line-height: 1.6; letter-spacing: 0.02em; }
+  .gate__cta { padding: 14px 20px; gap: 12px; letter-spacing: 0.22em; font-size: 12px; }
+  .gate__cta-key { display: none; }
+  .gate__eyebrow { letter-spacing: 0.28em; }
+}
