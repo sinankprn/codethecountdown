@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 
-export type Phase = "running" | "bigbang" | "settled";
+export type Phase = "running" | "bigbang";
 
 export type CountdownState = {
   digit: number; // 10..0
   phase: Phase;
   elapsed: number;
 };
-
-const BIGBANG_MS = 2800; // duration of the explosion before the field settles
 
 // runKey lets the parent restart the countdown by bumping the key.
 export function useCountdown(running: boolean, runKey: number, startFrom = 10): CountdownState {
@@ -24,22 +22,12 @@ export function useCountdown(running: boolean, runKey: number, startFrom = 10): 
       const elapsed = performance.now() - start;
       const ticksElapsed = Math.floor(elapsed / 1000);
       const digit = Math.max(0, startFrom - ticksElapsed);
-      let phase: Phase = "running";
-      if (digit === 0) {
-        const sinceZero = elapsed - startFrom * 1000;
-        phase = sinceZero > BIGBANG_MS ? "settled" : "bigbang";
-      }
+      const phase: Phase = digit === 0 ? "bigbang" : "running";
       setState({ digit, phase, elapsed });
-      // Schedule next update at the next semantically interesting moment.
-      let nextDelay: number;
       if (digit > 0) {
-        nextDelay = 1000 - (elapsed % 1000);
-      } else if (phase === "bigbang") {
-        nextDelay = Math.max(50, BIGBANG_MS - (elapsed - startFrom * 1000));
-      } else {
-        return; // settled — no more updates
+        timer = setTimeout(advance, 1000 - (elapsed % 1000));
       }
-      timer = setTimeout(advance, nextDelay);
+      // digit === 0: stay in bigbang forever; no further phase updates needed.
     };
 
     advance();

@@ -13,10 +13,15 @@ const RESEED_BELOW = 0.015;
 
 type Props = {
   digit: number;
-  phase: "running" | "bigbang" | "settled";
+  phase: "running" | "bigbang";
   running: boolean;
   runKey: number;
 };
+
+// After this many ms in bigbang, the simulation settles from explosive 70 tps
+// down to Conway's normal 12 tps — without reseeding. The cluster of
+// R-pentominoes evolves naturally, never replaced by still-lifes.
+const BIGBANG_BURST_MS = 2800;
 
 function colorForAge(age: number): [number, number, number] {
   if (age <= 1) return [66, 133, 244];     // IO blue
@@ -40,7 +45,7 @@ export function LifeCanvas({ digit, phase, running, runKey }: Props) {
   const lastDigitRef = useRef<number>(digit);
   const phaseRef = useRef<string>(phase);
   const tickAccRef = useRef<number>(0);
-  const settledAtRef = useRef<number>(0);
+  const bigbangAtRef = useRef<number>(0);
   const reducedMotionRef = useRef<boolean>(false);
 
   useEffect(() => {
@@ -101,7 +106,7 @@ export function LifeCanvas({ digit, phase, running, runKey }: Props) {
     seedRandom(grid, RULES[10].seedDensity);
     ruleRef.current = RULES[10];
     phaseRef.current = "running";
-    settledAtRef.current = 0;
+    bigbangAtRef.current = 0;
   }, [runKey]);
 
   // React to digit / phase changes.
@@ -140,38 +145,8 @@ export function LifeCanvas({ digit, phase, running, runKey }: Props) {
         }
       }
       ruleRef.current = RULES[10];
+      bigbangAtRef.current = performance.now();
       bus.emit("bigbang", undefined as unknown as void);
-    } else if (phase === "settled" && phaseRef.current !== "settled") {
-      // The typographic I/O wordmark is the focal point during settled phase.
-      // The grid becomes atmospheric: a dense forest of background still-lifes
-      // that surrounds (but never overlaps) the wordmark.
-      clearGrid(grid);
-      const cx = Math.floor(grid.cols / 2);
-      const cy = Math.floor(grid.rows / 2);
-      const stamps: string[][] = [
-        ["##", "##"],                          // block
-        [".##.", "#..#", ".##."],              // beehive
-        [".##.", "#..#", ".#.#", "..#."],      // loaf
-        ["##.", "#.#", ".#."],                 // boat
-        [".#.", "#.#", ".#."],                 // tub
-      ];
-      // Reserve a wide rectangle in the middle for the typographic wordmark.
-      const reserveW = Math.floor(grid.cols * 0.5);
-      const reserveH = Math.floor(grid.rows * 0.55);
-      let placed = 0;
-      let attempts = 0;
-      while (placed < 140 && attempts < 600) {
-        attempts++;
-        const sx = Math.floor(Math.random() * grid.cols);
-        const sy = Math.floor(Math.random() * grid.rows);
-        const dx = sx - cx;
-        const dy = sy - cy;
-        if (Math.abs(dx) < reserveW / 2 && Math.abs(dy) < reserveH / 2) continue;
-        const pat = stamps[Math.floor(Math.random() * stamps.length)];
-        stamp(grid, pat, sx, sy);
-        placed++;
-      }
-      settledAtRef.current = performance.now();
     } else if (phase === "running" && digit !== lastDigitRef.current) {
       const rule = RULES[digit] ?? RULES[10];
       ruleRef.current = rule;
@@ -203,7 +178,19 @@ export function LifeCanvas({ digit, phase, running, runKey }: Props) {
       const bloom = bloomRef.current;
       if (grid && sharp && bloom) {
         const shouldTick = !reducedMotionRef.current;
-        const tps = phaseRef.current === "bigbang" ? 70 : ruleRef.current.ticksPerSecond;
+        let tps: number;
+        if (phaseRef.current === "bigbang") {
+          // Burst at 70 tps for the initial explosion, then ease down to
+          // Conway's normal 12 tps so the field "settles" into ordinary
+          // evolution — no reseed, no still-life forest.
+          const elapsed = now - bigbangAtRef.current;
+          const t = Math.min(1, Math.max(0, elapsed / BIGBANG_BURST_MS));
+          // Ease-out cubic: fast at first, slow to settle.
+          const eased = 1 - Math.pow(1 - t, 3);
+          tps = 70 - (70 - RULES[10].ticksPerSecond) * eased;
+        } else {
+          tps = ruleRef.current.ticksPerSecond;
+        }
         let ticked = false;
         if (shouldTick) {
           tickAccRef.current += dt;
@@ -217,7 +204,7 @@ export function LifeCanvas({ digit, phase, running, runKey }: Props) {
             }
           }
         }
-        if (ticked || phaseRef.current === "bigbang" || phaseRef.current === "settled") {
+        if (ticked || phaseRef.current === "bigbang") {
           render(sharp, bloom, grid);
         }
       }

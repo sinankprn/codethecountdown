@@ -5,7 +5,7 @@ import "./Countdown.css";
 
 type Props = {
   digit: number;
-  phase: "running" | "bigbang" | "settled";
+  phase: "running" | "bigbang";
 };
 
 export function Countdown({ digit, phase }: Props) {
@@ -26,43 +26,35 @@ export function Countdown({ digit, phase }: Props) {
   }, [mx, my]);
 
   const ruleName =
-    phase === "settled" ? "ARRIVED" :
     phase === "bigbang" ? "BIG BANG" :
     RULES[digit]?.name ?? "I/O";
 
-  const showRule = phase !== "settled";
   const showDigit = phase === "running";
-  const showIO = phase === "bigbang" || phase === "settled";
   const digitLabel = digit === 10 ? "10" : `0${digit}`;
 
   return (
     <div className="cd" data-phase={phase}>
-      <AnimatePresence>
-        {showRule && (
-          <motion.div
-            className="cd__rule"
-            aria-hidden
-            initial={{ opacity: 0, y: -6 }}
+      <motion.div
+        className="cd__rule"
+        aria-hidden
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <span className="cd__rule-tag">RULE</span>
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={ruleName}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="cd__rule-name"
           >
-            <span className="cd__rule-tag">RULE</span>
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={ruleName}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="cd__rule-name"
-              >
-                {ruleName}
-              </motion.span>
-            </AnimatePresence>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {ruleName}
+          </motion.span>
+        </AnimatePresence>
+      </motion.div>
 
       <motion.div
         className="cd__stage"
@@ -79,27 +71,6 @@ export function Countdown({ digit, phase }: Props) {
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             >
               {digitLabel}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* I/O wordmark ghosts in during the bigbang and crystallizes when the field settles —
-            so the wordmark feels like the *outcome* of the explosion, not a separate event. */}
-        <AnimatePresence>
-          {showIO && (
-            <motion.div
-              key="io"
-              className="cd__digit cd__digit--io"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: phase === "settled" ? 1 : 0.45 }}
-              exit={{ opacity: 0 }}
-              transition={{
-                opacity: phase === "settled"
-                  ? { duration: 0.9, ease: [0.22, 1, 0.36, 1] }
-                  : { duration: 2.4, ease: [0.45, 0, 0.55, 1] },
-              }}
-            >
-              I/O
             </motion.div>
           )}
         </AnimatePresence>
