@@ -83,16 +83,31 @@ export function Countdown({ digit, phase }: Props) {
       >
         <AnimatePresence mode="popLayout">
           {centerLabel && (
-            <motion.div
-              key={centerKey}
-              className={centerClass}
-              initial={{ opacity: 0, scale: 0.7, letterSpacing: "0.4em", filter: "blur(20px)" }}
-              animate={{ opacity: 1, scale: 1, letterSpacing: "0", filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 1.15, filter: "blur(24px)" }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {centerLabel}
-            </motion.div>
+            phase === "settled" ? (
+              <motion.div
+                key={centerKey}
+                className={centerClass}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  opacity: { duration: 2.2, ease: [0.22, 1, 0.36, 1] },
+                }}
+              >
+                {centerLabel}
+              </motion.div>
+            ) : (
+              <motion.div
+                key={centerKey}
+                className={centerClass}
+                initial={{ opacity: 0, scale: 0.7, letterSpacing: "0.4em", filter: "blur(20px)" }}
+                animate={{ opacity: 1, scale: 1, letterSpacing: "0", filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 1.15, filter: "blur(24px)" }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {centerLabel}
+              </motion.div>
+            )
           )}
         </AnimatePresence>
       </motion.div>

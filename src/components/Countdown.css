@@ -74,7 +74,7 @@
 .cd__digit {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: min(clamp(22vh, 52vh, 760px), 70vw);
+  font-size: min(clamp(22vh, 52vh, 760px), 38vw);
   line-height: 1;
   letter-spacing: 0;
   display: inline-block;
@@ -102,7 +102,7 @@
 }
 
 .cd__digit--io {
-  font-size: min(clamp(18vh, 38vh, 580px), 60vw);
+  font-size: min(clamp(18vh, 38vh, 580px), 32vw);
   letter-spacing: 0;
   font-weight: 900;
   background-image: linear-gradient(
