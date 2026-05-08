@@ -73,6 +73,18 @@ export function Countdown({ digit, phase }: Props) {
               {digitLabel}
             </motion.div>
           )}
+          {phase === "bigbang" && (
+            <motion.div
+              key="io-wordmark"
+              className="cd__digit cd__digit--io"
+              initial={{ opacity: 0, scale: 0.6, letterSpacing: "0.6em", filter: "blur(28px)" }}
+              animate={{ opacity: 1, scale: 1, letterSpacing: "0", filter: "blur(0px)" }}
+              exit={{ opacity: 0, scale: 1.1, filter: "blur(20px)" }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              I/O
+            </motion.div>
+          )}
         </AnimatePresence>
       </motion.div>
 
