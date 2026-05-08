@@ -30,23 +30,10 @@ export function Countdown({ digit, phase }: Props) {
     phase === "bigbang" ? "BIG BANG" :
     RULES[digit]?.name ?? "I/O";
 
-  // The center stage: digit during running, hidden during bigbang, "I/O" during settled.
-  let centerKey: string;
-  let centerLabel: string;
-  let centerClass = "cd__digit";
-  if (phase === "running") {
-    centerKey = `d-${digit}`;
-    centerLabel = digit === 10 ? "10" : `0${digit}`;
-  } else if (phase === "bigbang") {
-    centerKey = "bigbang";
-    centerLabel = "";
-  } else {
-    centerKey = "io";
-    centerLabel = "I/O";
-    centerClass = "cd__digit cd__digit--io";
-  }
-
   const showRule = phase !== "settled";
+  const showDigit = phase === "running";
+  const showIO = phase === "bigbang" || phase === "settled";
+  const digitLabel = digit === 10 ? "10" : `0${digit}`;
 
   return (
     <div className="cd" data-phase={phase}>
@@ -82,32 +69,38 @@ export function Countdown({ digit, phase }: Props) {
         style={{ rotateX, rotateY, transformPerspective: 1400 }}
       >
         <AnimatePresence mode="popLayout">
-          {centerLabel && (
-            phase === "settled" ? (
-              <motion.div
-                key={centerKey}
-                className={centerClass}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{
-                  opacity: { duration: 2.2, ease: [0.22, 1, 0.36, 1] },
-                }}
-              >
-                {centerLabel}
-              </motion.div>
-            ) : (
-              <motion.div
-                key={centerKey}
-                className={centerClass}
-                initial={{ opacity: 0, scale: 0.7, letterSpacing: "0.4em", filter: "blur(20px)" }}
-                animate={{ opacity: 1, scale: 1, letterSpacing: "0", filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 1.15, filter: "blur(24px)" }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {centerLabel}
-              </motion.div>
-            )
+          {showDigit && (
+            <motion.div
+              key={`d-${digit}`}
+              className="cd__digit"
+              initial={{ opacity: 0, scale: 0.7, letterSpacing: "0.4em", filter: "blur(20px)" }}
+              animate={{ opacity: 1, scale: 1, letterSpacing: "0", filter: "blur(0px)" }}
+              exit={{ opacity: 0, scale: 1.15, filter: "blur(24px)" }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {digitLabel}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* I/O wordmark ghosts in during the bigbang and crystallizes when the field settles —
+            so the wordmark feels like the *outcome* of the explosion, not a separate event. */}
+        <AnimatePresence>
+          {showIO && (
+            <motion.div
+              key="io"
+              className="cd__digit cd__digit--io"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: phase === "settled" ? 1 : 0.45 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                opacity: phase === "settled"
+                  ? { duration: 0.9, ease: [0.22, 1, 0.36, 1] }
+                  : { duration: 2.4, ease: [0.45, 0, 0.55, 1] },
+              }}
+            >
+              I/O
+            </motion.div>
           )}
         </AnimatePresence>
       </motion.div>
