@@ -1,0 +1,157 @@
+.cd {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  pointer-events: none;
+  padding: clamp(20px, 4vmin, 56px);
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+
+.cd__rule {
+  grid-row: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: clamp(13px, 1.2vw, 16px);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  align-self: start;
+  justify-self: start;
+  background: rgba(7, 6, 15, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 10px 18px 10px 14px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.cd__rule-tag {
+  color: rgba(245, 243, 255, 0.55);
+  border: 1px solid rgba(245, 243, 255, 0.28);
+  padding: 4px 10px 3px;
+  border-radius: 999px;
+  font-size: 0.78em;
+}
+
+.cd__rule-name {
+  font-size: clamp(15px, 1.4vw, 19px);
+  letter-spacing: 0.2em;
+  color: var(--io-yellow);
+  text-shadow: 0 0 20px rgba(251, 188, 4, 0.7);
+  font-weight: 600;
+}
+
+.cd__stage {
+  grid-row: 2;
+  display: grid;
+  place-items: center;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* Dark radial scrim behind the digit so its dots don't camouflage with CA cells. */
+.cd__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 50% 38% at center,
+    rgba(7, 6, 15, 0.72) 0%,
+    rgba(7, 6, 15, 0.45) 45%,
+    rgba(7, 6, 15, 0) 75%
+  );
+  z-index: -1;
+}
+
+.cd__digit {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(22vh, 52vh, 760px);
+  line-height: 1;
+  letter-spacing: 0;
+  display: inline-block;
+  padding: 0 0.05em;
+  filter:
+    drop-shadow(0 0 24px rgba(0, 0, 0, 0.85))
+    drop-shadow(0 0 80px rgba(66, 133, 244, 0.7))
+    drop-shadow(0 12px 40px rgba(0, 0, 0, 0.9));
+  user-select: none;
+  background-image: linear-gradient(
+    175deg,
+    var(--io-blue) 0%,
+    #6aa5ff 28%,
+    var(--io-yellow) 56%,
+    var(--io-red) 82%,
+    var(--io-green) 100%
+  );
+  background-size: 100% 100%;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.cd__digit--io {
+  font-size: clamp(18vh, 38vh, 580px);
+  letter-spacing: 0;
+  font-weight: 900;
+  background-image: linear-gradient(
+    135deg,
+    var(--io-blue) 0%,
+    #6aa5ff 18%,
+    #ffffff 36%,
+    var(--io-yellow) 58%,
+    var(--io-red) 80%,
+    var(--io-green) 100%
+  );
+  background-size: 220% 220%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: io-shimmer 6s ease-in-out infinite;
+  filter:
+    drop-shadow(0 0 60px rgba(255, 255, 255, 0.55))
+    drop-shadow(0 0 180px rgba(234, 67, 53, 0.45))
+    drop-shadow(0 16px 60px rgba(0, 0, 0, 0.75));
+}
+
+@keyframes io-shimmer {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+}
+
+.cd__brand {
+  position: absolute;
+  bottom: clamp(20px, 4vmin, 56px);
+  right: clamp(20px, 4vmin, 56px);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+}
+.cd__brand-mark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  font-size: clamp(22px, 2.2vw, 32px);
+  background-image: linear-gradient(90deg, var(--io-blue), var(--io-green), var(--io-yellow), var(--io-red));
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.cd__brand-year { color: rgba(245, 243, 255, 0.5); }

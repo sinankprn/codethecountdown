@@ -1,0 +1,108 @@
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(ellipse at center, rgba(7, 6, 15, 0.7) 0%, rgba(7, 6, 15, 0.95) 80%);
+  backdrop-filter: blur(8px) saturate(1.2);
+  -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  border: 0;
+  cursor: pointer;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  text-align: center;
+  padding: 0;
+}
+
+.gate__inner {
+  display: grid;
+  gap: clamp(18px, 3vmin, 32px);
+  max-width: 720px;
+  padding: clamp(24px, 5vmin, 64px);
+}
+
+.gate__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: clamp(11px, 1vw, 13px);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.55);
+}
+.gate__pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--io-red);
+  box-shadow: 0 0 12px var(--io-red);
+  animation: gate-pulse 1.4s ease-in-out infinite;
+}
+@keyframes gate-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.6); }
+}
+
+.gate__title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(40px, 7.5vw, 120px);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  display: grid;
+  gap: 8px;
+  background: linear-gradient(
+    180deg,
+    #fff 0%,
+    #c2cdfe 40%,
+    var(--io-blue) 70%,
+    var(--io-green) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 80px rgba(66, 133, 244, 0.4);
+}
+.gate__title-accent {
+  font-style: normal;
+  background: linear-gradient(90deg, var(--io-yellow), var(--io-red));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 0.7em;
+  letter-spacing: 0.02em;
+}
+
+.gate__sub {
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.7;
+  color: rgba(245, 243, 255, 0.7);
+  letter-spacing: 0.04em;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.gate__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 8px;
+  padding: 18px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  font-size: clamp(13px, 1.2vw, 16px);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.gate:hover .gate__cta {
+  border-color: var(--io-blue);
+  box-shadow: 0 0 64px rgba(66, 133, 244, 0.35), inset 0 0 24px rgba(66, 133, 244, 0.08);
+  transform: translateY(-2px);
+}
+.gate__cta-arrow { color: var(--io-green); font-size: 11px; }
+.gate__cta-key { color: rgba(245, 243, 255, 0.4); font-size: 11px; }

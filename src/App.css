@@ -1,0 +1,49 @@
+.hud {
+  position: fixed;
+  bottom: clamp(20px, 4vmin, 56px);
+  left: clamp(20px, 4vmin, 56px);
+  z-index: 5;
+  display: inline-flex;
+  gap: 10px;
+}
+
+.hud__btn {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.1vw, 15px);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  background: rgba(7, 6, 15, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  color: var(--ink);
+  padding: 12px 22px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  font-weight: 600;
+}
+.hud__btn:hover {
+  border-color: var(--io-blue);
+  box-shadow: 0 0 32px rgba(66, 133, 244, 0.3);
+}
+.hud__key { color: rgba(245, 243, 255, 0.4); margin-left: 8px; }
+
+.flash {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+  transition: opacity 0.06s linear;
+}
+.flash--on {
+  opacity: 1;
+  animation: flash-fade 0.55s ease-out forwards;
+}
+@keyframes flash-fade {
+  0% { opacity: 1; }
+  8% { opacity: 1; }
+  100% { opacity: 0; }
+}
